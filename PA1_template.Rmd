@@ -8,18 +8,18 @@ output:
 
 ## Loading and preprocessing the data
 ```{r loading}
-unzip(zipfile="repdata_data_activity.zip")
+unzip(zipfile="repdata_data_activity.zip") ## unzip zip file and extract it out
 dat <- read.csv("activity.csv")
 summary(dat)
-head(dat)
-str(dat)
+head(dat) ## preview data
+str(dat) ## understand variables and its data type
 dat$date <- as.Date(dat$date, format="%Y-%m-%d")
 ```
 
 
 ## What is mean total number of steps taken per day?
 ```{r}
-q1 <- with(dat,tapply(steps,date,sum,na.rm=TRUE))
+q1 <- with(dat,tapply(steps,date,sum,na.rm=TRUE)) ## total number of steps group by date
 hist(q1,
 	main="Total number of Steps per Day",
 	xlab="Total Steps",ylab="Frequency",
@@ -31,8 +31,8 @@ median(q1)
 
 ## What is the average daily activity pattern?
 ```{r}
-aveSteps <- with(dat, tapply(steps,interval,mean,na.rm=TRUE))
-interval <- unique(dat$interval)
+aveSteps <- with(dat, tapply(steps,interval,mean,na.rm=TRUE)) ## average steps
+interval <- unique(dat$interval) 
 dat2 <- data.frame(cbind(interval,aveSteps))
 library(ggplot2)
 ggplot(data = dat2,aes(x = interval,y = aveSteps))+
@@ -45,12 +45,12 @@ dat2[which.max(dat2$aveSteps),1]
 ## Imputing missing values
 ```{r}
 sum(is.na(dat$steps))
-index <- which(is.na(dat$steps))
+index <- which(is.na(dat$steps)) ## find location of missing value
 len <- length(which(is.na(dat$steps)))
 aveSteps2 <- with(dat, tapply(steps,date,mean,na.rm=TRUE))
 valuetoreplace <- mean(with(dat,tapply(steps,date,mean,na.rm=TRUE)),na.rm = TRUE)
 for (i in 1:len) {
-        dat[index[i],1] <- valuetoreplace 
+        dat[index[i],1] <- valuetoreplace ## replace missing value with mean of steps
 }
 new <- with(dat,tapply(steps,date,sum,na.rm=TRUE))
 hist(new,
