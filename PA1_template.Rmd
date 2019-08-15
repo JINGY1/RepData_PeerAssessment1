@@ -7,7 +7,7 @@ output:
 
 
 ## Loading and preprocessing the data
-```{r loading}
+```{r loading, include=TRUE}
 unzip(zipfile="repdata_data_activity.zip") ## unzip zip file and extract it out
 dat <- read.csv("activity.csv")
 summary(dat)
@@ -18,7 +18,7 @@ dat$date <- as.Date(dat$date, format="%Y-%m-%d")
 
 
 ## What is mean total number of steps taken per day?
-```{r}
+```{r, include=TRUE}
 q1 <- with(dat,tapply(steps,date,sum,na.rm=TRUE)) ## total number of steps group by date
 hist(q1,
 	main="Total number of Steps per Day",
@@ -30,7 +30,7 @@ median(q1)
 
 
 ## What is the average daily activity pattern?
-```{r}
+```{r, include=TRUE}
 aveSteps <- with(dat, tapply(steps,interval,mean,na.rm=TRUE)) ## average steps
 interval <- unique(dat$interval) 
 dat2 <- data.frame(cbind(interval,aveSteps))
@@ -43,7 +43,7 @@ dat2[which.max(dat2$aveSteps),1]
 
 
 ## Imputing missing values
-```{r}
+```{r, include=TRUE}
 sum(is.na(dat$steps))
 index <- which(is.na(dat$steps)) ## find location of missing value
 len <- length(which(is.na(dat$steps)))
@@ -63,7 +63,7 @@ median(new)
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+```{r, include=TRUE}
 library(dplyr)
 newdat <- mutate(dat, day=ifelse(weekdays(dat$date)=="Saturday" | weekdays(dat$date)=="Sunday","weekend","weekday"))
 newdat$day<-as.factor(newdat$day)
